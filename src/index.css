@@ -1,111 +1,61 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+/* ==========================================================================
+   index.css — estilos globales de SonDrive
+   Se importa UNA sola vez, en main.tsx.
+   ========================================================================== */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+/* Fuentes de Google (Fraunces = títulos, Outfit = texto) */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap");
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Activa Tailwind v4 */
+@import "tailwindcss";
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
+/* ==========================================================================
+   TOKENS DE DISEÑO
+   Todo lo que se define como --color-xxx se vuelve clase automáticamente:
+     --color-marca  ->  bg-marca, text-marca, border-marca, ring-marca...
+   Y cualquier color admite opacidad con "/": bg-marca/10, border-exito/20
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+   REGLA: los fondos y bordes "tintados" (amarillo oscuro, verde oscuro,
+   rojo oscuro) NO tienen token propio. Se hacen con el color base + opacidad:
+     badge amarillo -> bg-marca/10   border-marca/20   text-marca
+     badge verde    -> bg-exito/10   border-exito/20   text-exito
+     badge rojo     -> bg-peligro/10 border-peligro/20 text-peligro
+   Así de 40 hex distintos del código de IA quedan solo 16.
+   ========================================================================== */
+@theme {
+  /* ── SUPERFICIES (de más oscuro a más claro) ─────────────────────────── */
+  --color-fondo: #0a0a0a; /* fondo de toda la página y de la Navbar */
+  --color-tarjeta: #141414; /* tarjetas, paneles, secciones (viaje, conductor, flota) */
+  --color-elevada: #1a1a1a; /* lo que va DENTRO de una tarjeta: inputs, filas de
+                                  vehículos, cajitas de "Viajes realizados" y "Teléfono",
+                                  fondo de fotos */
+  --color-divisor: #1e1e1e; /* líneas separadoras finas y fondo hover de botones del menú */
+  --color-borde: #252525; /* borde de tarjetas, inputs y botones secundarios */
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
+  /* ── TEXTO (de más fuerte a más tenue) ───────────────────────────────── */
+  --color-texto: #f0ede6; /* títulos y datos importantes (blanco cálido, no puro) */
+  --color-texto-suave: #b0aa9e; /* texto secundario: hora, links del menú, etiquetas */
+  --color-texto-tenue: #7a7570; /* texto de apoyo: fechas, "por puesto", párrafos, subtítulos */
+  --color-texto-apagado: #4a4a4a; /* texto deshabilitado: puestos ocupados, botón sin acción */
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
+  /* ── MARCA (el amarillo de SonDrive) ─────────────────────────────────── */
+  --color-marca: #f5c000; /* logo, precios, flechas, botón primario, item activo,
+                                    placas, puestos libres, bordes en hover */
+  --color-marca-oscuro: #e6b400; /* SOLO para el hover del botón primario */
 
-body {
-  margin: 0;
-}
+  /* ── ESTADOS (el "semáforo") ─────────────────────────────────────────── */
+  --color-exito: #22c55e; /* verde: "2 cupos", conductor activo, documento al día,
+                                 vehículo óptimo, "Sin alertas", toggle encendido */
+  --color-aviso: #f59e0b; /* ámbar: "1 cupo", vehículo en alerta, documento por vencer */
+  --color-peligro: #ef4444; /* rojo: 0 cupos, deshabilitado, estado crítico,
+                                 "Cancelar viaje", barra de kilometraje vencida */
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
+  /* ── MARCAS EXTERNAS ─────────────────────────────────────────────────── */
+  --color-whatsapp: #25d366; /* SOLO el botón "Contactar por WhatsApp"
+                                 (tinte con bg-whatsapp/10 border-whatsapp/20) */
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  /* ── FUENTES ─────────────────────────────────────────────────────────── */
+  --font-titulo: "Fraunces", serif; /* font-titulo: títulos y precios */
+  --font-sans:
+    "Outfit", sans-serif; /* font-sans: todo lo demás (ya es el default) */
 }
