@@ -9,6 +9,20 @@ TypeScript + Vite + Tailwind CSS 4. Consume la API de `SonDriveBackend`.
 - La API corriendo (`dotnet run --project API` en `SonDriveBackend`, en `http://localhost:5064`)
   para usar el sitio; **no** hace falta para las pruebas.
 
+## Todo con Docker (base de datos + API + frontend)
+
+Con los dos repositorios clonados uno al lado del otro (`SonDriveBackend` y `SonDriveFrontend`):
+
+```bash
+cd ../SonDriveBackend
+cp .env.example .env          # una sola vez: pon tu propia SQL_CLAVE_SA
+docker compose up --build     # http://localhost:5173 (frontend) y http://localhost:5064/swagger (API)
+```
+
+El frontend corre con recarga en caliente sobre el código de este repositorio. Si cambias
+`package.json`, vuelve a levantarlo con `docker compose up --build -V`. Detalles en
+`SonDriveBackend/CLAUDE.md` (sección Docker).
+
 ## Configuración
 
 Copia `.env.example` como `.env.development` (ya viene uno para desarrollo) y ajusta:

@@ -5,6 +5,10 @@ import { defineConfig } from "vitest/config";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    // En Docker sobre Windows/macOS los cambios del código montado solo se detectan por sondeo
+    watch: { usePolling: process.env.VITE_USAR_SONDEO === "true" },
+  },
   test: {
     environment: "jsdom",
     setupFiles: ["./src/pruebas/configuracion.ts"],
