@@ -1,75 +1,60 @@
-# React + TypeScript + Vite
+# SonDrive — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sitio web de SonDrive (viajes compartidos intermunicipales alrededor de Sonsón). React 19 +
+TypeScript + Vite + Tailwind CSS 4. Consume la API de `SonDriveBackend`.
 
-Currently, two official plugins are available:
+## Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js 22 o superior.
+- La API corriendo (`dotnet run --project API` en `SonDriveBackend`, en `http://localhost:5064`)
+  para usar el sitio; **no** hace falta para las pruebas.
 
-## React Compiler
+## Configuración
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Copia `.env.example` como `.env.development` (ya viene uno para desarrollo) y ajusta:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+VITE_URL_API=http://localhost:5064
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Si falta `VITE_URL_API`, el sitio muestra un error claro al hacer la primera solicitud.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Comandos
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install        # dependencias
+npm run dev        # servidor de desarrollo en http://localhost:5173
+npm run build      # verificación de tipos + compilación de producción
+npm run lint       # reglas de ESLint (incluye las de React Hooks y React Refresh)
+npm run test       # pruebas con Vitest (jsdom + Testing Library + MSW), sin red ni API real
 ```
+
+Antes de cerrar una tarea deben pasar `build`, `lint` y `test` (definición de terminado de la
+constitución del proyecto).
+
+## Estructura (por funcionalidades)
+
+```text
+src/
+├─ app/               enrutador, proveedores, diseño principal, secciones (rutas + navegación)
+├─ components/
+│  ├─ ui/             piezas visuales comunes: Boton, Tarjeta, CampoFormulario, Aviso, Modal, Estados…
+│  └─ layout/         Encabezado, NavegacionPrincipal, AccionSesion
+├─ features/
+│  └─ <funcionalidad>/   paginas/, componentes/, api.ts, consultas.ts, esquemas.ts, tipos.ts, index.ts
+├─ lib/               clienteHttp (token + errores ProblemDetails), configuración, errores
+└─ pruebas/           configuración de Vitest, servidor MSW, renderizarConApp
+```
+
+Reglas principales:
+
+- Una funcionalidad solo importa de otra a través de su `index.ts`; `components/ui` y `lib/` no
+  importan de `features/`.
+- Ningún componente llama `fetch`: los datos pasan por `consultas.ts` (TanStack Query) → `api.ts`
+  → `lib/clienteHttp`.
+- La sesión se lee y escribe solo en `features/autenticacion/sesion.ts`.
+- Cada sección nueva se registra en `src/app/secciones.ts` con su acceso (`publico`,
+  `soloVisitantes` o roles) y si aparece en la navegación.
+- Solo se usan los colores y fuentes de `@theme` en `src/index.css`; diseño desde el celular
+  (revisar a 320, 360, 768 y 1280 px).
+- Las pruebas viven junto al archivo probado (`Nombre.test.tsx`).
