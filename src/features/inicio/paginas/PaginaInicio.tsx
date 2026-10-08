@@ -1,7 +1,7 @@
-export default function Home() {
+export default function PaginaInicio() {
   return (
     <main>
-      <section className="px-6 pb-20 pt-32">
+      <section className="px-4 pb-20 pt-12 md:px-6 md:pt-16">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-marca/20 bg-marca/10 px-3 py-1 text-xs font-medium text-marca">
@@ -9,7 +9,7 @@ export default function Home() {
               Suroeste Antioqueño · Viajes compartidos
             </span>
 
-            <h1 className="mb-4 text-4xl font-bold leading-tight text-texto md:text-6xl">
+            <h1 className="mb-4 text-3xl font-bold leading-tight text-texto sm:text-4xl md:text-6xl">
               Tu ruta, <span className="text-marca">tu hora,</span>
               <br />
               tu precio.
