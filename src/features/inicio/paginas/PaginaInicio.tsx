@@ -1,6 +1,7 @@
 import imagenHero from "../../../assets/sonson-2.jpg";
 import Contenedor from "../../../components/ui/Contenedor";
 import Insignia from "../../../components/ui/Insignia";
+import { FormularioBuscarViaje, ResultadosViajes } from "../../viajes";
 import SeccionBeneficios from "../componentes/SeccionBeneficios";
 import SeccionQuienesSomos from "../componentes/SeccionQuienesSomos";
 
@@ -41,8 +42,14 @@ export default function PaginaInicio() {
               Sonsón, La Unión, Rionegro, La Ceja y Medellín.
             </p>
           </div>
+
+          <div className="mt-8 max-w-4xl">
+            <FormularioBuscarViaje />
+          </div>
         </Contenedor>
       </section>
+
+      <ResultadosViajes />
 
       <SeccionBeneficios />
       <SeccionQuienesSomos />
