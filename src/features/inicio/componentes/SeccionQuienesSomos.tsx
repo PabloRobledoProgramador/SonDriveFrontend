@@ -1,3 +1,4 @@
+import Aparecer from "../../../components/ui/Aparecer";
 import Contenedor from "../../../components/ui/Contenedor";
 import Insignia from "../../../components/ui/Insignia";
 
@@ -11,7 +12,7 @@ export default function SeccionQuienesSomos() {
   return (
     <section className="py-24">
       <Contenedor>
-        <div className="mb-14">
+        <Aparecer className="mb-14">
           <Insignia>
             <span className="size-1.5 rounded-full bg-marca" />
             Quiénes somos
@@ -26,9 +27,9 @@ export default function SeccionQuienesSomos() {
             qué precio. Hoy conectamos cinco municipios con conductores de
             confianza, tarifas transparentes y reservas desde el celular.
           </p>
-        </div>
+        </Aparecer>
 
-        <div className="max-w-xl">
+        <Aparecer desde="izquierda" className="max-w-xl">
           <h3 className="mb-4 text-2xl font-semibold text-texto">
             Rutas que conocemos, conductores que responden
           </h3>
@@ -58,7 +59,7 @@ export default function SeccionQuienesSomos() {
               </li>
             ))}
           </ul>
-        </div>
+        </Aparecer>
       </Contenedor>
     </section>
   );

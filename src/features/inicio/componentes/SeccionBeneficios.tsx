@@ -1,3 +1,4 @@
+import Aparecer from "../../../components/ui/Aparecer";
 import Contenedor from "../../../components/ui/Contenedor";
 import Tarjeta from "../../../components/ui/Tarjeta";
 
@@ -25,18 +26,24 @@ export default function SeccionBeneficios() {
   return (
     <section className="pb-4">
       <Contenedor className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {beneficios.map((beneficio) => (
-          <Tarjeta key={beneficio.titulo}>
-            <div aria-hidden="true" className="mb-3 text-2xl">
-              {beneficio.icono}
-            </div>
-            <h3 className="mb-2 text-base font-semibold text-texto">
-              {beneficio.titulo}
-            </h3>
-            <p className="text-sm leading-relaxed text-texto-tenue">
-              {beneficio.descripcion}
-            </p>
-          </Tarjeta>
+        {beneficios.map((beneficio, indice) => (
+          <Aparecer
+            key={beneficio.titulo}
+            retraso={indice * 100}
+            className="h-full"
+          >
+            <Tarjeta className="h-full">
+              <div aria-hidden="true" className="mb-3 text-2xl">
+                {beneficio.icono}
+              </div>
+              <h3 className="mb-2 text-base font-semibold text-texto">
+                {beneficio.titulo}
+              </h3>
+              <p className="text-sm leading-relaxed text-texto-tenue">
+                {beneficio.descripcion}
+              </p>
+            </Tarjeta>
+          </Aparecer>
         ))}
       </Contenedor>
     </section>
