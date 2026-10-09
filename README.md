@@ -52,7 +52,7 @@ constitución del proyecto).
 src/
 ├─ app/               enrutador, proveedores, diseño principal, secciones (rutas + navegación)
 ├─ components/
-│  ├─ ui/             piezas visuales comunes: Boton, Tarjeta, CampoFormulario, Aviso, Modal, Estados…
+│  ├─ ui/             piezas visuales comunes: Boton, Tarjeta, Insignia, Contenedor, CampoFormulario, Aviso, Modal, Estados…
 │  └─ layout/         Encabezado, NavegacionPrincipal, AccionSesion
 ├─ features/
 │  └─ <funcionalidad>/   paginas/, componentes/, api.ts, consultas.ts, esquemas.ts, tipos.ts, index.ts
@@ -69,6 +69,10 @@ Reglas principales:
 - La sesión se lee y escribe solo en `features/autenticacion/sesion.ts`.
 - Cada sección nueva se registra en `src/app/secciones.ts` con su acceso (`publico`,
   `soloVisitantes` o roles) y si aparece en la navegación.
+- Las páginas componen las piezas de `components/ui` (`Contenedor` para el ancho de página,
+  `Tarjeta`, `Insignia`, `Boton`) en vez de copiar sus clases. Si hace falta otra apariencia, se
+  agrega una variante u opción al componente (p. ej. `variante="fantasma"`, `compacto`): un
+  `className` que repite la misma propiedad (`px-3` sobre `px-4`) no tiene efecto en Tailwind 4.
 - Solo se usan los colores y fuentes de `@theme` en `src/index.css`; diseño desde el celular
   (revisar a 320, 360, 768 y 1280 px).
 - Las pruebas viven junto al archivo probado (`Nombre.test.tsx`).
