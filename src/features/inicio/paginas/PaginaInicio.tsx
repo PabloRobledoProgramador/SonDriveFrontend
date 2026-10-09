@@ -1,10 +1,12 @@
 import Contenedor from "../../../components/ui/Contenedor";
 import Insignia from "../../../components/ui/Insignia";
+import SeccionBeneficios from "../componentes/SeccionBeneficios";
+import SeccionQuienesSomos from "../componentes/SeccionQuienesSomos";
 
 export default function PaginaInicio() {
   return (
     <main>
-      <section className="pb-20 pt-12 md:pt-16">
+      <section className="pb-12 pt-12 md:pt-16">
         <Contenedor>
           <div className="max-w-2xl">
             <Insignia className="mb-6">
@@ -25,6 +27,9 @@ export default function PaginaInicio() {
           </div>
         </Contenedor>
       </section>
+
+      <SeccionBeneficios />
+      <SeccionQuienesSomos />
     </main>
   );
 }
