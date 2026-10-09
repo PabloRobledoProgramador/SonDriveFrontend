@@ -25,11 +25,11 @@ export default function AccionSesion() {
 
   return (
     <div className="flex min-w-0 items-center gap-2 md:gap-3">
-      <span className="max-w-[8rem] truncate text-sm font-medium text-texto md:hidden">{primerNombre}</span>
-      <span className="hidden text-sm font-medium text-texto md:inline">
+      <span className="max-w-[8rem] truncate text-sm font-medium md:hidden">{primerNombre}</span>
+      <span className="hidden text-sm font-medium md:inline">
         {usuario.nombre} {usuario.apellido}
       </span>
-      <Boton variante="secundario" className="shrink-0 px-3 md:px-4" onClick={() => cerrarSesion("manual")}>
+      <Boton variante="secundario" compacto className="shrink-0 md:px-4" onClick={() => cerrarSesion("manual")}>
         Cerrar sesión
       </Boton>
     </div>

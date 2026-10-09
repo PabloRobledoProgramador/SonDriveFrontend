@@ -6,6 +6,7 @@ interface PropiedadesBoton extends ButtonHTMLAttributes<HTMLButtonElement> {
   cargando?: boolean;
   textoCargando?: string;
   anchoCompleto?: boolean;
+  compacto?: boolean;
 }
 
 export default function Boton({
@@ -13,6 +14,7 @@ export default function Boton({
   cargando = false,
   textoCargando,
   anchoCompleto = false,
+  compacto = false,
   type = "button",
   disabled,
   className = "",
@@ -24,7 +26,7 @@ export default function Boton({
       type={type}
       disabled={disabled || cargando}
       aria-busy={cargando || undefined}
-      className={`${clasesBoton(variante, anchoCompleto)} ${className}`}
+      className={`${clasesBoton(variante, { anchoCompleto, compacto })} ${className}`}
       {...resto}
     >
       {cargando && textoCargando ? textoCargando : children}
