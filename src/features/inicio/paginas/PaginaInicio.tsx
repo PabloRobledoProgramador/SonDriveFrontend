@@ -1,3 +1,4 @@
+import imagenHero from "../../../assets/sonson-2.jpg";
 import Contenedor from "../../../components/ui/Contenedor";
 import Insignia from "../../../components/ui/Insignia";
 import SeccionBeneficios from "../componentes/SeccionBeneficios";
@@ -6,8 +7,23 @@ import SeccionQuienesSomos from "../componentes/SeccionQuienesSomos";
 export default function PaginaInicio() {
   return (
     <main>
-      <section className="pb-12 pt-12 md:pt-16">
-        <Contenedor>
+      <section className="relative overflow-hidden pb-12 pt-12 md:pt-16">
+        <img
+          src={imagenHero}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 size-full object-cover opacity-45"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-fondo/80 md:bg-transparent md:bg-linear-to-r md:from-fondo md:via-fondo/80 md:to-fondo/30"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-fondo to-transparent"
+        />
+
+        <Contenedor className="relative">
           <div className="max-w-2xl">
             <Insignia className="mb-6">
               <span className="size-1.5 rounded-full bg-marca" />
