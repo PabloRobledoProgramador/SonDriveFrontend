@@ -13,6 +13,8 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/pruebas/configuracion.ts"],
     globals: false,
+    // Margen por prueba para equipos lentos (dentro de Docker comparten CPU con SQL Server)
+    testTimeout: 15000,
     env: { VITE_URL_API: "http://api.prueba" },
   },
 });
