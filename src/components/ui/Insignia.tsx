@@ -10,10 +10,17 @@ const estilosTono: Record<Tono, string> = {
   peligro: "border-peligro/20 bg-peligro/10 text-peligro",
 };
 
-export default function Insignia({ tono = "marca", children }: { tono?: Tono; children: ReactNode }) {
+interface PropiedadesInsignia {
+  tono?: Tono;
+  // Solo para ubicarla (márgenes); el aspecto lo da el tono
+  className?: string;
+  children: ReactNode;
+}
+
+export default function Insignia({ tono = "marca", className = "", children }: PropiedadesInsignia) {
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${estilosTono[tono]}`}
+      className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium ${estilosTono[tono]} ${className}`}
     >
       {children}
     </span>

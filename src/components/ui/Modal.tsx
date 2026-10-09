@@ -1,4 +1,6 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
+import Boton from "./Boton";
+import Tarjeta from "./Tarjeta";
 
 interface PropiedadesModal {
   abierto: boolean;
@@ -33,29 +35,24 @@ export default function Modal({ abierto, titulo, alCerrar, children }: Propiedad
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-fondo/80 p-4 sm:items-center">
-      <div
+      <Tarjeta
         ref={refDialogo}
         role="dialog"
         aria-modal="true"
         aria-labelledby={idTitulo}
         tabIndex={-1}
-        className="w-full max-w-md rounded-2xl border border-borde bg-tarjeta p-6 outline-none"
+        className="w-full max-w-md outline-none"
       >
         <div className="mb-4 flex items-center justify-between gap-4">
-          <h2 id={idTitulo} className="text-lg font-semibold text-texto">
+          <h2 id={idTitulo} className="text-lg font-semibold">
             {titulo}
           </h2>
-          <button
-            type="button"
-            data-cerrar
-            onClick={alCerrar}
-            className="min-h-11 rounded-lg px-3 text-sm text-texto-suave transition-colors hover:bg-divisor hover:text-marca"
-          >
+          <Boton variante="fantasma" compacto data-cerrar onClick={alCerrar}>
             Cerrar
-          </button>
+          </Boton>
         </div>
         {children}
-      </div>
+      </Tarjeta>
     </div>
   );
 }

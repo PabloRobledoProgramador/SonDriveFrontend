@@ -14,7 +14,7 @@ export default function PaginaIniciarSesion() {
             <circle cx="16" cy="17" r="1.5" />
           </svg>
         </span>
-        <h1 className="mb-1 text-2xl font-bold text-texto">Iniciar sesión</h1>
+        <h1 className="mb-1 text-2xl font-bold">Iniciar sesión</h1>
         <p className="mb-6 text-sm text-texto-tenue">Accede a tu cuenta SonDrive</p>
 
         <Tarjeta className="w-full">

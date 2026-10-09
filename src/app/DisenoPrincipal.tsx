@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Encabezado from "../components/layout/Encabezado";
 import type { Enlace } from "../components/layout/NavegacionPrincipal";
 import Aviso from "../components/ui/Aviso";
+import Contenedor from "../components/ui/Contenedor";
 import EstadoCargando from "../components/ui/EstadoCargando";
 import { NavegacionSesion, useSesion } from "../features/autenticacion";
 import type { Seccion } from "./secciones";
@@ -54,13 +55,11 @@ export default function DisenoPrincipal({ secciones }: { secciones: Seccion[] })
       <Encabezado enlaces={enlaces} />
       <div className="pt-28 md:pt-16">
         {aviso && (
-          <div className="px-4 pt-4 md:px-6">
-            <div className="mx-auto max-w-6xl">
+          <Contenedor className="pt-4">
             <Aviso tipo="info" alCerrar={() => setAviso(null)}>
               {aviso}
             </Aviso>
-            </div>
-          </div>
+          </Contenedor>
         )}
         <Suspense fallback={<EstadoCargando />}>
           <Outlet />
