@@ -8,7 +8,11 @@ export function filtroDesdeParametros(
   const origenId = parametros.get("origen");
   const destinoId = parametros.get("destino");
   if (!origenId || !destinoId) return null;
-  return { origenId, destinoId, fecha: parametros.get("fecha") || undefined };
+  return {
+    origenId,
+    destinoId,
+    fecha: parametros.get("fecha") || undefined,
+  };
 }
 
 export function parametrosDesdeFiltro(filtro: FiltroViaje): URLSearchParams {

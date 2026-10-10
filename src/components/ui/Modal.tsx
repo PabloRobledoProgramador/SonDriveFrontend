@@ -10,7 +10,12 @@ interface PropiedadesModal {
 }
 
 // Ventana flotante accesible: se cierra con Escape o con su botón y recibe el foco al abrirse
-export default function Modal({ abierto, titulo, alCerrar, children }: PropiedadesModal) {
+export default function Modal({
+  abierto,
+  titulo,
+  alCerrar,
+  children,
+}: PropiedadesModal) {
   const idTitulo = useId();
   const refDialogo = useRef<HTMLDivElement>(null);
 
@@ -41,7 +46,7 @@ export default function Modal({ abierto, titulo, alCerrar, children }: Propiedad
         aria-modal="true"
         aria-labelledby={idTitulo}
         tabIndex={-1}
-        className="w-full max-w-md outline-none"
+        className="max-h-[90vh] w-full max-w-md overflow-y-auto outline-none"
       >
         <div className="mb-4 flex items-center justify-between gap-4">
           <h2 id={idTitulo} className="text-lg font-semibold">

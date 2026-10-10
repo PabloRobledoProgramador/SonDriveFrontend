@@ -46,6 +46,7 @@
   /* ── ESTADOS (el "semáforo") ─────────────────────────────────────────── */
   --color-exito: #22c55e; /* verde: "2 cupos", conductor activo, documento al día,
                                  vehículo óptimo, "Sin alertas", toggle encendido */
+  --color-info: #60a5fa; /* azul: notas informativas y avisos de pago */
   --color-aviso: #f59e0b; /* ámbar: "1 cupo", vehículo en alerta, documento por vencer */
   --color-peligro: #ef4444; /* rojo: 0 cupos, deshabilitado, estado crítico,
                                  "Cancelar viaje", barra de kilometraje vencida */

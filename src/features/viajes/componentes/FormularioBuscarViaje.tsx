@@ -29,7 +29,13 @@ export default function FormularioBuscarViaje() {
   });
 
   const buscar = (datos: DatosBuscarViaje) => {
-    setParametros(parametrosDesdeFiltro({ origenId: datos.origenId, destinoId: datos.destinoId, fecha: datos.fecha }));
+    setParametros(
+      parametrosDesdeFiltro({
+        origenId: datos.origenId,
+        destinoId: datos.destinoId,
+        fecha: datos.fecha,
+      }),
+    );
   };
 
   const alEnviar = (evento: FormEvent<HTMLFormElement>) => handleSubmit(buscar)(evento);
