@@ -1,5 +1,8 @@
 import { http, HttpResponse, type RequestHandler } from "msw";
-import type { InicioSesionRespuesta, InicioSesionSolicitud } from "../features/autenticacion";
+import type {
+  InicioSesionRespuesta,
+  InicioSesionSolicitud,
+} from "../features/autenticacion";
 
 // Manejadores MSW por defecto para todas las pruebas. Cada prueba puede agregar o
 // reemplazar manejadores con servidor.use(...).
@@ -27,17 +30,27 @@ function respuestaAdministrador(): InicioSesionRespuesta {
 }
 
 const problema = (detalle: string) =>
-  HttpResponse.json({ title: "No autorizado", status: 401, detail: detalle }, { status: 401 });
+  HttpResponse.json(
+    { title: "No autorizado", status: 401, detail: detalle },
+    { status: 401 },
+  );
 
 export const manejadores: RequestHandler[] = [
-  http.post(`${URL_API_PRUEBA}/api/autenticacion/iniciar-sesion`, async ({ request }) => {
-    const datos = (await request.json()) as InicioSesionSolicitud;
-    if (datos.correo === CORREO_INACTIVO) {
-      return problema("El usuario está desactivado. Contacta al administrador.");
-    }
-    if (datos.correo === CORREO_ADMIN && datos.clave === CLAVE_ADMIN) {
-      return HttpResponse.json(respuestaAdministrador());
-    }
-    return problema("Correo o clave incorrectos.");
-  }),
+  // Ciudades del buscador de viajes de la página de inicio
+  http.get(`${URL_API_PRUEBA}/api/ciudad`, () => HttpResponse.json([])),
+  http.post(
+    `${URL_API_PRUEBA}/api/autenticacion/iniciar-sesion`,
+    async ({ request }) => {
+      const datos = (await request.json()) as InicioSesionSolicitud;
+      if (datos.correo === CORREO_INACTIVO) {
+        return problema(
+          "El usuario está desactivado. Contacta al administrador.",
+        );
+      }
+      if (datos.correo === CORREO_ADMIN && datos.clave === CLAVE_ADMIN) {
+        return HttpResponse.json(respuestaAdministrador());
+      }
+      return problema("Correo o clave incorrectos.");
+    },
+  ),
 ];

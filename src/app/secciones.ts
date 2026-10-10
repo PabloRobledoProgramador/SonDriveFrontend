@@ -4,6 +4,7 @@
 import { lazy, type ComponentType } from "react";
 import { cargarPaginaIniciarSesion, type Rol } from "../features/autenticacion";
 import { cargarPaginaInicio } from "../features/inicio";
+import { cargarPaginaRutas } from "../features/rutas";
 
 export type AccesoSeccion = "publico" | "soloVisitantes" | Rol[];
 
@@ -22,6 +23,13 @@ export const secciones: Seccion[] = [
     acceso: "publico",
     enNavegacion: true,
     pagina: lazy(cargarPaginaInicio),
+  },
+  {
+    ruta: "/rutas",
+    nombre: "Rutas",
+    acceso: "publico",
+    enNavegacion: true,
+    pagina: lazy(cargarPaginaRutas),
   },
   {
     ruta: "/iniciar-sesion",
