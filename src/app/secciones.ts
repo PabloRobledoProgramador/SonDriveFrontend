@@ -11,6 +11,7 @@ import { cargarPaginaInicio } from "../features/inicio";
 import { cargarPaginaRutas } from "../features/rutas";
 import { cargarPaginaMisViajes } from "../features/viajes";
 import { cargarPaginaVehiculos } from "../features/vehiculos";
+import { cargarPaginaConductores } from "../features/conductores";
 
 export type AccesoSeccion = "publico" | "soloVisitantes" | Rol[];
 
@@ -50,6 +51,13 @@ export const secciones: Seccion[] = [
     acceso: ["Administrador"],
     enNavegacion: true,
     pagina: lazy(cargarPaginaVehiculos),
+  },
+  {
+    ruta: "/conductores",
+    nombre: "Conductores",
+    acceso: ["Administrador"],
+    enNavegacion: true,
+    pagina: lazy(cargarPaginaConductores),
   },
   {
     ruta: "/iniciar-sesion",
