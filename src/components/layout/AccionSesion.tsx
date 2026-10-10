@@ -19,9 +19,20 @@ export default function AccionSesion() {
         ? RUTA_INICIAR_SESION
         : rutaIniciarSesion(ubicacion.pathname + ubicacion.search);
     return (
-      <Link to={destino} className={clasesBoton("secundario")}>
-        Iniciar sesión
-      </Link>
+      <div className="flex shrink-0 items-center gap-2">
+        <Link
+          to="/registrarse"
+          className={clasesBoton("principal", { compacto: true })}
+        >
+          Registrarse
+        </Link>
+        <Link
+          to={destino}
+          className={clasesBoton("secundario", { compacto: true })}
+        >
+          Iniciar sesión
+        </Link>
+      </div>
     );
   }
 

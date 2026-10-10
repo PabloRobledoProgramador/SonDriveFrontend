@@ -2,10 +2,18 @@
 export { default as ProveedorSesion } from "./ProveedorSesion";
 export { useSesion } from "./useSesion";
 export type { MotivoCierre, ValorSesion } from "./contextoSesion";
-export type { InicioSesionRespuesta, InicioSesionSolicitud, Rol, Sesion, Usuario } from "./tipos";
+export type {
+  InicioSesionRespuesta,
+  InicioSesionSolicitud,
+  Rol,
+  Sesion,
+  Usuario,
+  UsuarioCrearDto,
+} from "./tipos";
 
 // Carga diferida de la página (principio VIII: el enrutador la carga con lazy)
 export const cargarPaginaIniciarSesion = () => import("./paginas/PaginaIniciarSesion");
+export const cargarPaginaRegistro = () => import("./paginas/PaginaRegistro");
 
 export { default as NavegacionSesion } from "./componentes/NavegacionSesion";
 export { default as RutaSoloVisitantes } from "./componentes/RutaSoloVisitantes";

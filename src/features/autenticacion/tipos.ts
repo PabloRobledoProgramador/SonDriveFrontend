@@ -20,6 +20,18 @@ export interface InicioSesionSolicitud {
   clave: string;
 }
 
+// Campos del UsuarioCrearDto del backend utilizados por el registro público.
+export interface UsuarioCrearDto {
+  nombre: string;
+  apellido: string;
+  correo: string;
+  clave: string;
+  celular: string;
+  estado?: boolean;
+  rol?: Rol;
+  foto?: string | null;
+}
+
 // InicioSesionRespuestaDTO
 export interface InicioSesionRespuesta {
   token: string;

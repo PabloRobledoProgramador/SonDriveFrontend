@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
+import Boton from "../../../components/ui/Boton";
 import Tarjeta from "../../../components/ui/Tarjeta";
 import FormularioInicioSesion from "../componentes/FormularioInicioSesion";
 
-// Pantalla "Iniciar sesión" (captura "Iniciar cesión.png"). Sin registro ni recuperación de
-// contraseña: las cuentas las crea la administradora (FR-006).
+// Pantalla para acceder a una cuenta SonDrive o crear una cuenta de conductor.
 export default function PaginaIniciarSesion() {
+  const navegar = useNavigate();
+
   return (
     <main className="flex justify-center px-4 py-12 md:py-20">
       <div className="flex w-full max-w-sm flex-col items-center">
@@ -20,6 +23,17 @@ export default function PaginaIniciarSesion() {
         <Tarjeta className="w-full">
           <FormularioInicioSesion />
         </Tarjeta>
+        <p className="mt-5 text-center text-sm text-texto-tenue">
+          ¿Aún no tienes cuenta?
+        </p>
+        <Boton
+          variante="secundario"
+          anchoCompleto
+          className="mt-2"
+          onClick={() => navegar("/registrarse")}
+        >
+          Registrarse
+        </Boton>
       </div>
     </main>
   );

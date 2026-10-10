@@ -2,7 +2,11 @@
 // (FR-014, FR-017). Cada módulo nuevo agrega aquí sus secciones con el acceso de la matriz de la
 // constitución (principio IV).
 import { lazy, type ComponentType } from "react";
-import { cargarPaginaIniciarSesion, type Rol } from "../features/autenticacion";
+import {
+  cargarPaginaIniciarSesion,
+  cargarPaginaRegistro,
+  type Rol,
+} from "../features/autenticacion";
 import { cargarPaginaInicio } from "../features/inicio";
 import { cargarPaginaRutas } from "../features/rutas";
 import { cargarPaginaMisViajes } from "../features/viajes";
@@ -53,6 +57,13 @@ export const secciones: Seccion[] = [
     acceso: "soloVisitantes",
     enNavegacion: false,
     pagina: lazy(cargarPaginaIniciarSesion),
+  },
+  {
+    ruta: "/registrarse",
+    nombre: "Registrarse",
+    acceso: "soloVisitantes",
+    enNavegacion: false,
+    pagina: lazy(cargarPaginaRegistro),
   },
   // Debe ir al final: cualquier dirección que no coincida con las anteriores (FR-021)
   {

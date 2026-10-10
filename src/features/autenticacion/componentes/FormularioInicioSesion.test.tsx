@@ -143,12 +143,28 @@ describe("FormularioInicioSesion", () => {
     expect(router.state.location.search).toBe("?volver=%2F");
   });
 
-  it("no ofrece registro ni recuperación de contraseña", async () => {
+  it("ofrece registro y no ofrece recuperación de contraseña", async () => {
     renderizarConApp("/iniciar-sesion");
 
     await screen.findByLabelText("Correo electrónico");
 
-    expect(screen.queryByText(/Registr/i)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Registrarse" }),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/Olvidaste/i)).not.toBeInTheDocument();
+  });
+
+  it("el botón Registrarse abre el formulario de creación de cuenta", async () => {
+    const usuario = userEvent.setup();
+    const { router } = renderizarConApp("/iniciar-sesion");
+
+    await usuario.click(
+      await screen.findByRole("button", { name: "Registrarse" }),
+    );
+
+    expect(router.state.location.pathname).toBe("/registrarse");
+    expect(
+      await screen.findByRole("form", { name: "Crear cuenta" }),
+    ).toBeInTheDocument();
   });
 });
