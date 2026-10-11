@@ -1,7 +1,11 @@
 import { solicitar } from "../../lib/clienteHttp";
-import type { Usuario, UsuarioCrearDto } from "./tipos";
-import type { ViajeResumen } from "../viajes/tipos";
-import type { VehiculoFlota } from "../vehiculos/tipos";
+import type {
+  ConductorActualizarDto,
+  Usuario,
+  UsuarioCrearDto,
+  VehiculoFlota,
+  ViajeResumen,
+} from "./tipos";
 
 export async function listarConductores(): Promise<Usuario[]> {
   const usuarios = await solicitar<Usuario[]>("/api/usuario");
@@ -19,6 +23,17 @@ export function listarViajes(idUsuario: number): Promise<ViajeResumen[]> {
 export function crearConductor(datos: UsuarioCrearDto): Promise<Usuario> {
   return solicitar<Usuario>("/api/usuario", {
     metodo: "POST",
+    cuerpo: datos,
+  });
+}
+
+// Solo nombre, apellido, correo, celular y foto: el estado, el rol y la clave no cambian
+export function actualizarConductor(
+  id: number,
+  datos: ConductorActualizarDto,
+): Promise<Usuario> {
+  return solicitar<Usuario>(`/api/usuario/${id}/conductor`, {
+    metodo: "PUT",
     cuerpo: datos,
   });
 }

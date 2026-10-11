@@ -1,7 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ErrorApi } from "../../lib/errores";
 import * as api from "./api";
-import type { Usuario, UsuarioCrearDto, VehiculoFlota } from "./tipos";
+import type {
+  ConductorActualizarDto,
+  Usuario,
+  UsuarioCrearDto,
+  VehiculoFlota,
+} from "./tipos";
 
 export const clavesConductores = {
   lista: ["conductores", "lista"] as const,
@@ -38,6 +43,33 @@ export function useCrearConductor() {
       clienteConsultas.invalidateQueries({
         queryKey: clavesConductores.lista,
       }),
+  });
+}
+
+export function useActualizarConductor() {
+  const clienteConsultas = useQueryClient();
+  return useMutation<
+    Usuario,
+    ErrorApi,
+    { id: number; datos: ConductorActualizarDto }
+  >({
+    mutationFn: ({ id, datos }) => api.actualizarConductor(id, datos),
+    onSuccess: () => {
+      void clienteConsultas.invalidateQueries({
+        queryKey: clavesConductores.lista,
+      });
+      // El nombre y el celular del conductor también se muestran en la flota y en los viajes
+      void clienteConsultas.invalidateQueries({ queryKey: ["vehiculos"] });
+      void clienteConsultas.invalidateQueries({ queryKey: ["viajes"] });
+    },
+    onError: (error) => {
+      // El conductor ya no existe: el listado quedó desactualizado
+      if (error.tipo === "noEncontrado") {
+        void clienteConsultas.invalidateQueries({
+          queryKey: clavesConductores.lista,
+        });
+      }
+    },
   });
 }
 

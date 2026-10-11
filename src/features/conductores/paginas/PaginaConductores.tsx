@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Aviso from "../../../components/ui/Aviso";
 import Boton from "../../../components/ui/Boton";
 import Contenedor from "../../../components/ui/Contenedor";
 import EstadoCargando from "../../../components/ui/EstadoCargando";
 import EstadoError from "../../../components/ui/EstadoError";
 import Insignia from "../../../components/ui/Insignia";
+import Modal from "../../../components/ui/Modal";
 import Tarjeta from "../../../components/ui/Tarjeta";
 import {
   useCambiarEstadoConductor,
@@ -13,8 +14,8 @@ import {
   useViajesConductor,
 } from "../consultas";
 import FormularioCrearConductor from "../componentes/FormularioCrearConductor";
-import type { Usuario, VehiculoFlota } from "../tipos";
-import type { ViajeResumen } from "../../viajes/tipos";
+import FormularioEditarConductor from "../componentes/FormularioEditarConductor";
+import type { Usuario, VehiculoFlota, ViajeResumen } from "../tipos";
 
 const conductoresVacios: Usuario[] = [];
 const vehiculosVacios: VehiculoFlota[] = [];
@@ -112,12 +113,14 @@ function TarjetaConductor({
   estadoVehiculos,
   alCambiarEstado,
   cambiandoEstado,
+  alEditar,
 }: {
   conductor: Usuario;
   vehiculos: VehiculoFlota[] | null;
   estadoVehiculos: "cargando" | "error" | "listo";
   alCambiarEstado: () => void;
   cambiandoEstado: boolean;
+  alEditar: () => void;
 }) {
   const viajes = useViajesConductor(conductor.id);
   const vehiculosDelConductor =
@@ -268,6 +271,16 @@ function TarjetaConductor({
       {conductor.estado && (
         <BotonWhatsApp conductor={conductor} ruta={ruta} />
       )}
+      {/* Siempre el último elemento del cuadro, también en conductores deshabilitados */}
+      <Boton
+        variante="secundario"
+        anchoCompleto
+        className="mt-3"
+        aria-label={`Editar datos del conductor ${conductor.nombre} ${conductor.apellido}`}
+        onClick={alEditar}
+      >
+        Editar datos del conductor
+      </Boton>
     </article>
   );
 }
@@ -278,6 +291,12 @@ export default function PaginaConductores() {
   const cambiarEstado = useCambiarEstadoConductor();
   const [formularioAbierto, setFormularioAbierto] = useState(false);
   const [mensajeExito, setMensajeExito] = useState<string | null>(null);
+  // null = sin edición abierta; solo se edita un conductor a la vez
+  const [conductorEnEdicion, setConductorEnEdicion] = useState<Usuario | null>(
+    null,
+  );
+  // Estable entre renders: Modal la usa en un efecto
+  const cerrarEdicion = useCallback(() => setConductorEnEdicion(null), []);
   const lista = conductores.data ?? conductoresVacios;
   const activos = lista.filter((conductor) => conductor.estado).length;
   const deshabilitados = lista.length - activos;
@@ -423,6 +442,10 @@ export default function PaginaConductores() {
                           estado: !conductor.estado,
                         });
                       }}
+                      alEditar={() => {
+                        setMensajeExito(null);
+                        setConductorEnEdicion(conductor);
+                      }}
                     />
                   </li>
                 ))}
@@ -431,6 +454,30 @@ export default function PaginaConductores() {
           </>
         )}
       </Contenedor>
+
+      <Modal
+        abierto={conductorEnEdicion !== null}
+        titulo={
+          conductorEnEdicion
+            ? `Editar datos de ${conductorEnEdicion.nombre} ${conductorEnEdicion.apellido}`
+            : ""
+        }
+        alCerrar={cerrarEdicion}
+      >
+        {conductorEnEdicion && (
+          <FormularioEditarConductor
+            key={conductorEnEdicion.id}
+            conductor={conductorEnEdicion}
+            alGuardar={(actualizado) => {
+              setConductorEnEdicion(null);
+              setMensajeExito(
+                `Los datos de ${actualizado.nombre} ${actualizado.apellido} se actualizaron.`,
+              );
+            }}
+            alCancelar={cerrarEdicion}
+          />
+        )}
+      </Modal>
     </main>
   );
 }

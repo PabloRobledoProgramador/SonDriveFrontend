@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-export const esquemaCrearConductor = z.object({
+const MENSAJE_FOTO = "Escribe una URL válida para la foto.";
+
+// Datos comunes al alta y a la edición: así ambos formularios no pueden divergir.
+// Los textos se recortan antes de validar, igual que en el servidor.
+const datosConductor = {
   nombre: z
     .string()
     .trim()
@@ -18,18 +22,33 @@ export const esquemaCrearConductor = z.object({
     .max(150, "El correo no puede superar los 150 caracteres."),
   celular: z
     .string()
+    .trim()
     .regex(/^3\d{9}$/, "Usa 10 dígitos y comienza por 3."),
+  // Opcional; si se escribe, solo http o https (misma regla que ValidacionFoto en el backend)
+  foto: z
+    .string()
+    .trim()
+    .max(500, "La URL de la foto no puede superar los 500 caracteres.")
+    .refine(
+      (url) =>
+        url === "" ||
+        (/^https?:\/\//i.test(url) && z.url().safeParse(url).success),
+      MENSAJE_FOTO,
+    ),
+};
+
+export const esquemaCrearConductor = z.object({
+  ...datosConductor,
   clave: z
     .string()
     .min(8, "La contraseña debe tener al menos 8 caracteres.")
     .max(72, "La contraseña no puede superar los 72 caracteres."),
-  foto: z
-    .string()
-    .trim()
-    .refine(
-      (url) => url === "" || z.url().safeParse(url).success,
-      "Escribe una URL válida para la foto.",
-    ),
 });
 
+// La edición no incluye contraseña, rol ni estado
+export const esquemaEditarConductor = z.object(datosConductor);
+
 export type DatosFormularioConductor = z.input<typeof esquemaCrearConductor>;
+export type DatosFormularioEdicionConductor = z.input<
+  typeof esquemaEditarConductor
+>;
