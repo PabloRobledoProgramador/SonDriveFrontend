@@ -50,4 +50,37 @@ describe("Modal", () => {
 
     expect(screen.getByRole("dialog")).toContainElement(document.activeElement as HTMLElement);
   });
+
+  it("el foco inicial salta los campos deshabilitados", () => {
+    render(
+      <Modal abierto titulo="Editar vehículo" alCerrar={() => {}}>
+        <select aria-label="Conductor" disabled />
+        <input aria-label="Placa" />
+      </Modal>,
+    );
+
+    expect(screen.getByLabelText("Placa")).toHaveFocus();
+  });
+
+  it("sin la opción ancho conserva el ancho normal", () => {
+    render(
+      <Modal abierto titulo="Registrar pasajero" alCerrar={() => {}}>
+        <p>Contenido</p>
+      </Modal>,
+    );
+
+    expect(screen.getByRole("dialog")).toHaveClass("max-w-md");
+  });
+
+  it("con ancho amplio usa el ancho mayor", () => {
+    render(
+      <Modal abierto ancho="amplio" titulo="Editar vehículo" alCerrar={() => {}}>
+        <p>Contenido</p>
+      </Modal>,
+    );
+
+    const dialogo = screen.getByRole("dialog");
+    expect(dialogo).toHaveClass("max-w-2xl");
+    expect(dialogo).not.toHaveClass("max-w-md");
+  });
 });

@@ -3,16 +3,12 @@ import { useState, type FormEvent } from "react";
 import { useForm } from "react-hook-form";
 import Aviso from "../../../components/ui/Aviso";
 import Boton from "../../../components/ui/Boton";
-import CampoFormulario from "../../../components/ui/CampoFormulario";
-import CampoSelect from "../../../components/ui/CampoSelect";
 import EstadoError from "../../../components/ui/EstadoError";
 import { ErrorApi, MENSAJE_GENERICO } from "../../../lib/errores";
 import { useConductores, useCrearVehiculo } from "../consultas";
-import {
-  esquemaCrearVehiculo,
-  type DatosFormularioVehiculo,
-} from "../esquemas";
+import { esquemaVehiculo, type DatosFormularioVehiculo } from "../esquemas";
 import type { VehiculoFlota } from "../tipos";
+import CamposVehiculo from "./CamposVehiculo";
 
 const CAMPOS_SERVIDOR: Record<string, keyof DatosFormularioVehiculo> = {
   idUsuario: "idUsuario",
@@ -26,8 +22,6 @@ const CAMPOS_SERVIDOR: Record<string, keyof DatosFormularioVehiculo> = {
   vencimientoTecnomecanica: "vencimientoTecnomecanica",
   vencimientoLicencia: "vencimientoLicencia",
 };
-
-const hoy = () => new Date().toLocaleDateString("sv-SE");
 
 export default function FormularioCrearVehiculo({
   alCrear,
@@ -45,7 +39,7 @@ export default function FormularioCrearVehiculo({
     setError,
     formState: { errors },
   } = useForm<DatosFormularioVehiculo>({
-    resolver: zodResolver(esquemaCrearVehiculo),
+    resolver: zodResolver(esquemaVehiculo),
     defaultValues: {
       idUsuario: "",
       placa: "",
@@ -123,97 +117,18 @@ export default function FormularioCrearVehiculo({
         </Aviso>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <CampoSelect
-          etiqueta="Conductor asignado"
-          disabled={sinConductores}
-          error={errors.idUsuario?.message}
-          {...register("idUsuario")}
-        >
-          <option value="">
-            {conductores.isPending ? "Cargando…" : "Selecciona un conductor"}
-          </option>
-          {conductores.data?.map((conductor) => (
-            <option key={conductor.id} value={conductor.id}>
-              {conductor.nombre} {conductor.apellido}
-            </option>
-          ))}
-        </CampoSelect>
-        <CampoFormulario
-          etiqueta="Placa"
-          autoCapitalize="characters"
-          placeholder="ABC 123"
-          maxLength={7}
-          error={errors.placa?.message}
-          {...register("placa")}
-        />
-        <CampoFormulario
-          etiqueta="Modelo del vehículo"
-          placeholder="Renault Logan"
-          maxLength={100}
-          error={errors.modelo?.message}
-          {...register("modelo")}
-        />
-        <CampoFormulario
-          etiqueta="Año del modelo"
-          type="number"
-          min="1990"
-          max={new Date().getFullYear() + 1}
-          error={errors.annoModelo?.message}
-          {...register("annoModelo")}
-        />
-        <CampoSelect
-          etiqueta="Tipo de vehículo"
-          error={errors.tipo?.message}
-          {...register("tipo")}
-        >
-          <option value="">Selecciona</option>
-          <option value="Sedan">Sedán</option>
-          <option value="Hatchback">Hatchback</option>
-          <option value="SUV">SUV</option>
-          <option value="Pickup">Pickup</option>
-        </CampoSelect>
-        <CampoFormulario
-          etiqueta="Kilometraje actual"
-          type="number"
-          min="0"
-          step="1"
-          inputMode="numeric"
-          error={errors.kilometraje?.message}
-          {...register("kilometraje")}
-        />
-      </div>
-
-      <div className="rounded-xl border border-borde bg-elevada/50 p-4">
-        <h3 className="mb-3 text-sm font-semibold">Documentos y servicio</h3>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <CampoFormulario
-            etiqueta="Vencimiento SOAT"
-            type="date"
-            error={errors.vencimientoSoat?.message}
-            {...register("vencimientoSoat")}
-          />
-          <CampoFormulario
-            etiqueta="Vencimiento tecnomecánica"
-            type="date"
-            error={errors.vencimientoTecnomecanica?.message}
-            {...register("vencimientoTecnomecanica")}
-          />
-          <CampoFormulario
-            etiqueta="Vencimiento licencia de conducción"
-            type="date"
-            error={errors.vencimientoLicencia?.message}
-            {...register("vencimientoLicencia")}
-          />
-          <CampoFormulario
-            etiqueta="Fecha del último servicio (opcional)"
-            type="date"
-            max={hoy()}
-            error={errors.fechaUltimoServicio?.message}
-            {...register("fechaUltimoServicio")}
-          />
-        </div>
-      </div>
+      <CamposVehiculo
+        register={register}
+        errors={errors}
+        conductores={(conductores.data ?? []).map((conductor) => ({
+          id: conductor.id,
+          nombre: `${conductor.nombre} ${conductor.apellido}`,
+        }))}
+        conductoresDeshabilitado={sinConductores}
+        textoSinSeleccion={
+          conductores.isPending ? "Cargando…" : "Selecciona un conductor"
+        }
+      />
 
       <div className="flex flex-wrap justify-end gap-3">
         <Boton variante="secundario" onClick={alCancelar}>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Aviso from "../../../components/ui/Aviso";
 import Boton from "../../../components/ui/Boton";
 import Contenedor from "../../../components/ui/Contenedor";
@@ -6,9 +6,11 @@ import EstadoCargando from "../../../components/ui/EstadoCargando";
 import EstadoError from "../../../components/ui/EstadoError";
 import EstadoVacio from "../../../components/ui/EstadoVacio";
 import Insignia from "../../../components/ui/Insignia";
+import Modal from "../../../components/ui/Modal";
 import Tarjeta from "../../../components/ui/Tarjeta";
 import DetalleVehiculo from "../componentes/DetalleVehiculo";
 import FormularioCrearVehiculo from "../componentes/FormularioCrearVehiculo";
+import FormularioEditarVehiculo from "../componentes/FormularioEditarVehiculo";
 import { useFallasVehiculo, useFlota } from "../consultas";
 import { estadoVehiculo } from "../estadoVehiculo";
 import type { VehiculoFlota } from "../tipos";
@@ -92,7 +94,13 @@ export default function PaginaVehiculos() {
   const flota = useFlota();
   const [idSeleccionado, setIdSeleccionado] = useState<number | null>(null);
   const [agregando, setAgregando] = useState(false);
-  const [vehiculoAgregado, setVehiculoAgregado] = useState<string | null>(null);
+  const [mensajeExito, setMensajeExito] = useState<string | null>(null);
+  // Copia del vehículo con la que se abrió la edición (null = formulario cerrado). Es una copia
+  // para que el formulario siga abierto aunque la lista cambie mientras se edita.
+  const [vehiculoEnEdicion, setVehiculoEnEdicion] =
+    useState<VehiculoFlota | null>(null);
+  // Estable: Modal la usa en un efecto
+  const cerrarEdicion = useCallback(() => setVehiculoEnEdicion(null), []);
   const vehiculos = flota.data ?? [];
   const vehiculoSeleccionado =
     vehiculos.find((vehiculo) => vehiculo.id === idSeleccionado) ??
@@ -161,13 +169,10 @@ export default function PaginaVehiculos() {
           )}
         </div>
 
-        {vehiculoAgregado && (
+        {mensajeExito && (
           <div className="mb-6">
-            <Aviso
-              tipo="exito"
-              alCerrar={() => setVehiculoAgregado(null)}
-            >
-              {vehiculoAgregado} se agregó a la flota.
+            <Aviso tipo="exito" alCerrar={() => setMensajeExito(null)}>
+              {mensajeExito}
             </Aviso>
           </div>
         )}
@@ -198,7 +203,9 @@ export default function PaginaVehiculos() {
                   alCrear={(vehiculo) => {
                     setIdSeleccionado(vehiculo.id);
                     setAgregando(false);
-                    setVehiculoAgregado(vehiculo.nombreVehiculo);
+                    setMensajeExito(
+                      `${vehiculo.nombreVehiculo} se agregó a la flota.`,
+                    );
                   }}
                 />
               </Tarjeta>
@@ -234,7 +241,9 @@ export default function PaginaVehiculos() {
                     alCrear={(vehiculo) => {
                       setIdSeleccionado(vehiculo.id);
                       setAgregando(false);
-                      setVehiculoAgregado(vehiculo.nombreVehiculo);
+                      setMensajeExito(
+                      `${vehiculo.nombreVehiculo} se agregó a la flota.`,
+                    );
                     }}
                   />
                 </Tarjeta>
@@ -263,6 +272,10 @@ export default function PaginaVehiculos() {
                   key={vehiculoSeleccionado.id}
                   vehiculo={vehiculoSeleccionado}
                   consultaFallas={consultaFallas}
+                  alEditar={() => {
+                    setMensajeExito(null);
+                    setVehiculoEnEdicion(vehiculoSeleccionado);
+                  }}
                 />
               ) : (
                 <EstadoCargando texto="Cargando información del vehículo…" />
@@ -271,6 +284,36 @@ export default function PaginaVehiculos() {
           </div>
         )}
       </Contenedor>
+
+      <Modal
+        abierto={vehiculoEnEdicion !== null}
+        ancho="amplio"
+        titulo={
+          vehiculoEnEdicion
+            ? `Editar datos de ${vehiculoEnEdicion.nombreVehiculo} · ${vehiculoEnEdicion.placa}`
+            : ""
+        }
+        alCerrar={cerrarEdicion}
+      >
+        {vehiculoEnEdicion && (
+          <FormularioEditarVehiculo
+            key={vehiculoEnEdicion.id}
+            vehiculo={vehiculoEnEdicion}
+            alCancelar={cerrarEdicion}
+            alGuardar={(actualizado) => {
+              const cambioDeConductor =
+                actualizado.idUsuario !== vehiculoEnEdicion.idUsuario;
+              setVehiculoEnEdicion(null);
+              setIdSeleccionado(actualizado.id);
+              setMensajeExito(
+                cambioDeConductor
+                  ? `Los datos de ${actualizado.nombreVehiculo} se actualizaron. Ahora está asignado a ${actualizado.conductor}.`
+                  : `Los datos de ${actualizado.nombreVehiculo} se actualizaron.`,
+              );
+            }}
+          />
+        )}
+      </Modal>
     </main>
   );
 }

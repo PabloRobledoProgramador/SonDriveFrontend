@@ -1,5 +1,6 @@
 import { solicitar } from "../../lib/clienteHttp";
 import type { Usuario } from "../autenticacion";
+import type { ViajeResumen } from "../viajes";
 import type {
   DatosVehiculo,
   FallaVehiculo,
@@ -23,6 +24,23 @@ export function crearVehiculo(datos: DatosVehiculo): Promise<VehiculoFlota> {
     metodo: "POST",
     cuerpo: datos,
   });
+}
+
+export function actualizarVehiculo(
+  id: number,
+  datos: DatosVehiculo,
+): Promise<VehiculoFlota> {
+  return solicitar<VehiculoFlota>(`/api/vehiculo/${id}`, {
+    metodo: "PUT",
+    cuerpo: datos,
+  });
+}
+
+// Viajes próximos de un conductor, para avisar cuáles pasarán a otro al reasignar un vehículo
+export function listarViajesDeConductor(
+  idUsuario: number,
+): Promise<ViajeResumen[]> {
+  return solicitar<ViajeResumen[]>(`/api/viaje/usuario/${idUsuario}`);
 }
 
 export function listarFallas(idVehiculo: number): Promise<FallaVehiculo[]> {

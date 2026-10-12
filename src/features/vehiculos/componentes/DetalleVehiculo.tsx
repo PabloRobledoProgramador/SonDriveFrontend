@@ -107,9 +107,12 @@ function colorFalla(severidad: FallaVehiculo["severidad"]) {
 export default function DetalleVehiculo({
   vehiculo,
   consultaFallas,
+  alEditar,
 }: {
   vehiculo: VehiculoFlota;
   consultaFallas: UseQueryResult<FallaVehiculo[], ErrorApi>;
+  // Solo avisa: el formulario de edición lo abre la página
+  alEditar: () => void;
 }) {
   const estado = estadoVehiculo(vehiculo);
   const [reportando, setReportando] = useState(false);
@@ -174,6 +177,16 @@ export default function DetalleVehiculo({
               {formatearFecha(vehiculo.fechaUltimoServicio)}
             </p>
           </div>
+        </div>
+
+        <div className="mt-4 flex justify-end">
+          <Boton
+            variante="secundario"
+            aria-label={`Editar datos del vehículo ${vehiculo.nombreVehiculo} ${vehiculo.placa}`}
+            onClick={alEditar}
+          >
+            Editar datos del vehículo
+          </Boton>
         </div>
       </Tarjeta>
 

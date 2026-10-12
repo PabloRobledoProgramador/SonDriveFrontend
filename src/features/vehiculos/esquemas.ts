@@ -17,7 +17,8 @@ const esquemaFecha = (mensaje: string) =>
     .min(1, mensaje)
     .refine(fechaValida, "Indica una fecha válida.");
 
-export const esquemaCrearVehiculo = z.object({
+// Lo usan el alta y la edición: las reglas de un vehículo son las mismas en ambas
+export const esquemaVehiculo = z.object({
   idUsuario: z.string().min(1, "Elige el conductor.").refine(
     (id) => Number(id) > 0,
     "Elige un conductor válido.",
@@ -61,7 +62,7 @@ export const esquemaCrearVehiculo = z.object({
   ),
 });
 
-export type DatosFormularioVehiculo = z.input<typeof esquemaCrearVehiculo>;
+export type DatosFormularioVehiculo = z.input<typeof esquemaVehiculo>;
 
 export const esquemaReportarFalla = z.object({
   descripcion: z

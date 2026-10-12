@@ -8,11 +8,13 @@ import type {
   VehiculoFlota,
 } from "./tipos";
 import type { Usuario } from "../autenticacion";
+import type { ViajeResumen } from "../viajes";
 
 export const clavesVehiculos = {
   flota: ["vehiculos", "flota"] as const,
   conductores: ["vehiculos", "conductores"] as const,
   fallas: (idVehiculo: number) => ["vehiculos", "fallas", idVehiculo] as const,
+  viajes: (idUsuario: number) => ["vehiculos", "viajes", idUsuario] as const,
 };
 
 export function useFlota() {
@@ -52,6 +54,38 @@ export function useCrearVehiculo() {
     mutationFn: api.crearVehiculo,
     onSuccess: () =>
       clienteConsultas.invalidateQueries({ queryKey: clavesVehiculos.flota }),
+  });
+}
+
+export function useViajesProximosDeConductor(idUsuario: number) {
+  return useQuery<ViajeResumen[], ErrorApi>({
+    queryKey: clavesVehiculos.viajes(idUsuario),
+    queryFn: () => api.listarViajesDeConductor(idUsuario),
+  });
+}
+
+export function useActualizarVehiculo() {
+  const clienteConsultas = useQueryClient();
+  return useMutation<
+    VehiculoFlota,
+    ErrorApi,
+    { id: number; datos: DatosVehiculo }
+  >({
+    mutationFn: ({ id, datos }) => api.actualizarVehiculo(id, datos),
+    onSuccess: () => {
+      // El conductor y los datos del vehículo también se muestran en conductores y en viajes
+      void clienteConsultas.invalidateQueries({ queryKey: ["conductores"] });
+      void clienteConsultas.invalidateQueries({ queryKey: ["viajes"] });
+      // Se espera la flota para que el detalle ya esté al día cuando se cierre el formulario
+      return clienteConsultas.invalidateQueries({ queryKey: ["vehiculos"] });
+    },
+    onError: (error) => {
+      // El vehículo ya no existe: la lista que se muestra quedó vieja
+      if (error.tipo === "noEncontrado") {
+        void clienteConsultas.invalidateQueries({ queryKey: ["vehiculos"] });
+        void clienteConsultas.invalidateQueries({ queryKey: ["conductores"] });
+      }
+    },
   });
 }
 
