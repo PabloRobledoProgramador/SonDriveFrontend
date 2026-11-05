@@ -1,35 +1,22 @@
+import Boton from "../../../components/ui/Boton";
 import Insignia from "../../../components/ui/Insignia";
 import Tarjeta from "../../../components/ui/Tarjeta";
+import {
+  formatoFecha,
+  formatoHora,
+  formatoPrecio,
+  textoCupos,
+  tonoCupos,
+} from "../formato";
 import type { ViajeResumen } from "../tipos";
 
-const formatoPrecio = new Intl.NumberFormat("es-CO", {
-  style: "currency",
-  currency: "COP",
-  maximumFractionDigits: 0,
-});
-const formatoFecha = new Intl.DateTimeFormat("es-CO", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-});
-const formatoHora = new Intl.DateTimeFormat("es-CO", {
-  hour: "numeric",
-  minute: "2-digit",
-  hour12: true,
-});
-
-function tonoCupos(cupos: number) {
-  if (cupos <= 0) return "peligro";
-  if (cupos === 1) return "aviso";
-  return "exito";
-}
-
-function textoCupos(cupos: number) {
-  if (cupos <= 0) return "Sin cupos";
-  return cupos === 1 ? "1 cupo" : `${cupos} cupos`;
-}
-
-export default function TarjetaViaje({ viaje }: { viaje: ViajeResumen }) {
+export default function TarjetaViaje({
+  viaje,
+  alVerDetalle,
+}: {
+  viaje: ViajeResumen;
+  alVerDetalle: () => void;
+}) {
   const salida = new Date(viaje.fechaSalida);
 
   return (
@@ -80,6 +67,11 @@ export default function TarjetaViaje({ viaje }: { viaje: ViajeResumen }) {
         <Insignia tono={tonoCupos(viaje.cuposLibres)}>
           {textoCupos(viaje.cuposLibres)}
         </Insignia>
+      </div>
+      <div className="flex justify-end border-t border-divisor pt-3">
+        <Boton variante="fantasma" compacto onClick={alVerDetalle}>
+          Ver detalles →
+        </Boton>
       </div>
     </Tarjeta>
   );

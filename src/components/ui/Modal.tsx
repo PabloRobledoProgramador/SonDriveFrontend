@@ -6,21 +6,34 @@ interface PropiedadesModal {
   abierto: boolean;
   titulo: string;
   alCerrar: () => void;
+  // "amplio" para formularios de dos columnas
+  ancho?: "normal" | "amplio";
   children: ReactNode;
 }
 
+const CLASES_ANCHO = {
+  normal: "max-w-md",
+  amplio: "max-w-2xl",
+} as const;
+
 // Ventana flotante accesible: se cierra con Escape o con su botón y recibe el foco al abrirse
-export default function Modal({ abierto, titulo, alCerrar, children }: PropiedadesModal) {
+export default function Modal({
+  abierto,
+  titulo,
+  alCerrar,
+  ancho = "normal",
+  children,
+}: PropiedadesModal) {
   const idTitulo = useId();
   const refDialogo = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!abierto) return;
 
-    // Foco inicial: el primer campo del contenido o, si no hay, el propio diálogo
+    // Foco inicial: el primer campo habilitado del contenido o, si no hay, el propio diálogo
     const dialogo = refDialogo.current;
     const primerEnfocable = dialogo?.querySelector<HTMLElement>(
-      "input, select, textarea, button:not([data-cerrar]), [href], [tabindex]:not([tabindex='-1'])",
+      "input:not(:disabled), select:not(:disabled), textarea:not(:disabled), button:not([data-cerrar]):not(:disabled), [href], [tabindex]:not([tabindex='-1'])",
     );
     (primerEnfocable ?? dialogo)?.focus();
 
@@ -41,7 +54,7 @@ export default function Modal({ abierto, titulo, alCerrar, children }: Propiedad
         aria-modal="true"
         aria-labelledby={idTitulo}
         tabIndex={-1}
-        className="w-full max-w-md outline-none"
+        className={`max-h-[90vh] w-full overflow-y-auto outline-none ${CLASES_ANCHO[ancho]}`}
       >
         <div className="mb-4 flex items-center justify-between gap-4">
           <h2 id={idTitulo} className="text-lg font-semibold">

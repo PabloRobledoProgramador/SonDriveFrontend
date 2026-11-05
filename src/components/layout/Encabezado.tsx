@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Contenedor from "../ui/Contenedor";
+import IconoMarca from "../ui/IconoMarca";
 import AccionSesion from "./AccionSesion";
 import NavegacionPrincipal, { type Enlace } from "./NavegacionPrincipal";
 
@@ -10,7 +11,8 @@ export default function Encabezado({ enlaces }: { enlaces: Enlace[] }) {
     <header className="fixed inset-x-0 top-0 z-40 border-b border-borde bg-fondo">
       {/* Mismo Contenedor que las páginas: el logo queda alineado con el contenido */}
       <Contenedor className="flex h-16 items-center justify-between gap-3">
-        <Link to="/" className="flex min-h-11 shrink-0 items-center font-titulo text-lg font-semibold text-marca">
+        <Link to="/" className="flex min-h-11 shrink-0 items-center gap-2 font-titulo text-lg font-semibold text-marca">
+          <IconoMarca tamano="pequeno" />
           SonDrive
         </Link>
         <NavegacionPrincipal enlaces={enlaces} variante="cabecera" />

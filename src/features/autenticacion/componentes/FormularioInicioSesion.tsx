@@ -25,7 +25,7 @@ export default function FormularioInicioSesion() {
     formState: { errors },
   } = useForm<DatosInicioSesion>({
     resolver: zodResolver(esquemaInicioSesion),
-    defaultValues: { correo: "", clave: "" },
+    defaultValues: { correo: parametros.get("correo") ?? "", clave: "" },
   });
 
   const enviar = async (datos: DatosInicioSesion) => {

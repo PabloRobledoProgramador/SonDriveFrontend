@@ -62,11 +62,26 @@ describe("Encabezado", () => {
     expect(router.state.location.pathname).toBe("/rutas");
   });
 
-  it("no ofrece registrarse", async () => {
-    renderizarConApp("/");
+  it("muestra Registrarse junto a Iniciar sesión para visitantes", async () => {
+    const usuario = userEvent.setup();
+    const { router } = renderizarConApp("/");
+    const [cabecera] = await screen.findAllByRole("navigation", {
+      name: "Navegación principal",
+    });
+    const enlaceRegistro = await screen.findByRole("link", {
+      name: "Registrarse",
+    });
 
-    await screen.findByRole("link", { name: "Iniciar sesión" });
-
-    expect(screen.queryByText(/Registr/i)).not.toBeInTheDocument();
+    expect(enlaceRegistro).toHaveAttribute("href", "/registrarse");
+    expect(enlaceRegistro).toHaveClass("bg-marca", "text-fondo");
+    expect(
+      screen.getByRole("link", { name: "Iniciar sesión" }),
+    ).toBeInTheDocument();
+    await usuario.click(enlaceRegistro);
+    expect(router.state.location.pathname).toBe("/registrarse");
+    expect(
+      await screen.findByRole("form", { name: "Crear cuenta" }),
+    ).toBeInTheDocument();
+    expect(cabecera).toBeInTheDocument();
   });
 });
