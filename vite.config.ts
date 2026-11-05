@@ -8,6 +8,7 @@ export default defineConfig({
   server: {
     // En Docker sobre Windows/macOS los cambios del código montado solo se detectan por sondeo
     watch: { usePolling: process.env.VITE_USAR_SONDEO === "true" },
+    open: true,
   },
   test: {
     environment: "jsdom",
